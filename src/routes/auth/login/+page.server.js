@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { db } from '$lib/server/database.js';
 import { redis } from '$lib/server/redis.js';
-import { sendPasswordResetEmail } from '$lib/server/email.js';
+import { sendVerificationEmail, sendPasswordResetEmail } from '$lib/server/email.js';
 import { JWT_SECRET, BCRYPT_ROUNDS } from '$env/static/private';
 
 // Validation schemas
@@ -171,17 +171,16 @@ export const actions = {
 			);
 
 			if (existingUser.rows.length > 0) {
-				const existing = existingUser.rows[0];
 				const existingEmail = await db.query('SELECT email FROM users WHERE email = $1', [data.email]);
 				const existingUsername = await db.query('SELECT username FROM users WHERE username = $1', [data.username]);
-				
+
 				if (existingEmail.rows.length > 0) {
 					return fail(400, {
 						message: 'An account with this email already exists',
 						username: data.username
 					});
 				}
-				
+
 				if (existingUsername.rows.length > 0) {
 					return fail(400, {
 						message: 'This username is already taken',
@@ -221,7 +220,7 @@ export const actions = {
 				})
 			);
 
-			// TODO: Send verification email
+			// Send verification email (now correctly imported and called)
 			await sendVerificationEmail(user.email, verificationToken);
 
 			return {
@@ -304,8 +303,8 @@ export const actions = {
 				[resetToken, new Date(Date.now() + 60 * 60 * 1000), userRecord.id]
 			);
 
-			// TODO: Send password reset email
-			// await sendPasswordResetEmail(userRecord.email, resetToken);
+			// Send password reset email (now correctly called)
+			await sendPasswordResetEmail(userRecord.email, resetToken);
 
 			return {
 				success: true,
@@ -325,7 +324,7 @@ export const actions = {
 		try {
 			// Get the current token to invalidate session
 			const token = cookies.get('auth_token');
-			
+
 			if (token) {
 				try {
 					const decoded = jwt.verify(token, JWT_SECRET);
