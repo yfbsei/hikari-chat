@@ -1,5 +1,6 @@
 // src/lib/server/database.js
-import { Pool } from '../../../node_modules/@types/pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import { 
 	DATABASE_URL, 
 	DB_HOST, 
