@@ -6,8 +6,20 @@
 
 	let { children } = $props();
 
-	// Get user data from page data
-	$: user = $page.data?.user;
+	// Get user data from page data using $derived instead of $:
+	const user = $derived($page.data?.user);
+	
+	// Calculate page title using $derived
+	const pageTitle = $derived(() => {
+		const routeId = $page.route.id;
+		if (routeId === '/auth/login') {
+			return 'Hikari Chat - Login';
+		} else if (routeId === '/dashboard') {
+			return 'Hikari Chat - Dashboard';
+		} else {
+			return 'Hikari Chat - AI-Powered Messaging Platform';
+		}
+	});
 
 	onMount(() => {
 		// Add Inter font family to Tailwind config
@@ -16,15 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>
-		{#if $page.route.id === '/auth/login'}
-			Hikari Chat - Login
-		{:else if $page.route.id === '/dashboard'}
-			Hikari Chat - Dashboard
-		{:else}
-			Hikari Chat - AI-Powered Messaging Platform
-		{/if}
-	</title>
+	<title>{pageTitle()}</title>
 </svelte:head>
 
 {@render children()}
