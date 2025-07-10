@@ -4,9 +4,8 @@
 	import { page } from '$app/stores';
 	import { currentUser } from '$lib/stores/dashboard.js';
 	
-	export let data;
-	
-	let { children } = $props();
+	// Use $props() instead of export let for Svelte 5
+	let { data, children } = $props();
 	
 	// Set user data when component mounts
 	onMount(() => {

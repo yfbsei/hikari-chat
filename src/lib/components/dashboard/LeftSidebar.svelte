@@ -1,6 +1,6 @@
 <!-- src/lib/components/dashboard/LeftSidebar.svelte -->
 <script>
-	import { Plus, ChevronDown, Hash, MessageCircle, Bot, ArrowLeftRight, Megaphone } from 'lucide-react';
+	import { Plus, ChevronDown, Hash, MessageCircle, Bot, ArrowLeftRight, Megaphone } from 'lucide';
 	
 	let channels = [
 		{ id: 1, name: 'General Discussion', icon: Hash, unread: 12, active: true },

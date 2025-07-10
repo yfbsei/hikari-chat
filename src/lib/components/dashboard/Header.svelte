@@ -1,6 +1,6 @@
 <!-- src/lib/components/dashboard/Header.svelte -->
 <script>
-	import { Search, Bell, ChevronDown, EyeOff, Eye } from 'lucide-react';
+	import { Search, Bell, ChevronDown, EyeOff, Eye } from 'lucide';
 	
 	export let rightSidebarVisible;
 	

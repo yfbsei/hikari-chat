@@ -1,6 +1,6 @@
 <!-- src/lib/components/dashboard/RightSidebar.svelte -->
 <script>
-	import { Users, BarChart3, Bot } from 'lucide-react';
+	import { Users, BarChart3, Bot } from 'lucide';
 	
 	let activeTab = 'team';
 	

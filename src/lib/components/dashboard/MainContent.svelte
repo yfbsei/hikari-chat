@@ -1,6 +1,6 @@
 <!-- src/lib/components/dashboard/MainContent.svelte -->
 <script>
-	import { Users, Settings, Paperclip, Image, Smile, Mic, Send } from 'lucide-react';
+	import { Users, Settings, Paperclip, Image, Smile, Mic, Send } from 'lucide';
 	
 	let messageInput = '';
 	
@@ -28,11 +28,11 @@
 				<p class="text-gray-400 text-sm">Main workspace channel for team collaboration</p>
 			</div>
 			<div class="flex gap-3">
-				<button class="flex items-center gap-2 px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700 hover:border-blue-500 hover:text-white transition-all text-sm">
+				<button class="flex items-center gap-2 px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700 hover:border-blue-500 hover:text-white transition-all text-sm" aria-label="View channel members">
 					<Users class="w-4 h-4" />
 					<span class="hidden sm:inline">23 members</span>
 				</button>
-				<button class="w-10 h-10 bg-gray-800 border border-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-700 hover:border-blue-500 transition-all">
+				<button class="w-10 h-10 bg-gray-800 border border-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-700 hover:border-blue-500 transition-all" aria-label="Channel settings">
 					<Settings class="w-4 h-4 text-gray-400" />
 				</button>
 			</div>
@@ -104,13 +104,13 @@
 						<p>Welcome to your new workspace! I'm here to help you with translations, summaries, and smart automation. Try asking me anything by typing <code class="bg-gray-700 text-blue-400 px-1 rounded">@ai</code> followed by your question.</p>
 					</div>
 					<div class="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors">
+						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors" aria-label="Like message">
 							<i class="fas fa-thumbs-up text-sm"></i>
 						</button>
-						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors">
+						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors" aria-label="Reply to message">
 							<i class="fas fa-reply text-sm"></i>
 						</button>
-						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors">
+						<button class="hover:bg-gray-700 p-1 rounded text-gray-500 hover:text-gray-300 transition-colors" aria-label="Bookmark message">
 							<i class="fas fa-bookmark text-sm"></i>
 						</button>
 					</div>
@@ -125,13 +125,13 @@
 			<div class="flex items-end gap-3">
 				<!-- Left Actions -->
 				<div class="flex gap-2">
-					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all">
+					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all" aria-label="Attach file">
 						<Paperclip class="w-4 h-4" />
 					</button>
-					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all">
+					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all" aria-label="Attach image">
 						<Image class="w-4 h-4" />
 					</button>
-					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all">
+					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all" aria-label="Add emoji">
 						<Smile class="w-4 h-4" />
 					</button>
 				</div>
@@ -149,16 +149,17 @@
 
 				<!-- Right Actions -->
 				<div class="flex gap-2">
-					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all">
+					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all" aria-label="Send payment">
 						<i class="fas fa-coins"></i>
 					</button>
-					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all">
+					<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-300 hover:bg-gray-700 rounded-lg transition-all" aria-label="Voice message">
 						<Mic class="w-4 h-4" />
 					</button>
 					<button 
 						on:click={handleSubmit}
 						disabled={!messageInput.trim()}
 						class="w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg flex items-center justify-center hover:from-blue-600 hover:to-blue-700 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+						aria-label="Send message"
 					>
 						<Send class="w-4 h-4" />
 					</button>
