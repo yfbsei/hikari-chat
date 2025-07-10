@@ -156,15 +156,30 @@ export const cacheManager = {
 export const rateLimiter = {
 	// Check if action is rate limited
 	async isRateLimited(key, limit = 100, windowSeconds = 3600) {
-		const pipeline = redis.pipeline();
+		console.log(`🔍 Rate limit check for key: ${key}, limit: ${limit}, window: ${windowSeconds}s`);
 		
+		// Get current count first
+		const currentCount = await redis.get(key);
+		const count = currentCount ? parseInt(currentCount) : 0;
+		
+		console.log(`📊 Current count: ${count}, limit: ${limit}`);
+		
+		// Check if already over limit BEFORE incrementing
+		if (count >= limit) {
+			console.log(`🚫 Rate limit exceeded: ${count}/${limit}`);
+			return true;
+		}
+		
+		// Increment the counter
+		const pipeline = redis.pipeline();
 		pipeline.incr(key);
 		pipeline.expire(key, windowSeconds);
 		
 		const results = await pipeline.exec();
-		const count = results[0][1]; // Get result from incr command
+		const newCount = results[0][1]; // Get result from incr command
 		
-		return count > limit;
+		console.log(`✅ Rate limit OK: ${newCount}/${limit}`);
+		return false; // Not rate limited
 	},
 
 	// Get current rate limit status
@@ -182,6 +197,7 @@ export const rateLimiter = {
 
 	// Reset rate limit for a key
 	async resetRateLimit(key) {
+		console.log(`🧹 Resetting rate limit for key: ${key}`);
 		await redis.del(key);
 	}
 };
