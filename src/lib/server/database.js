@@ -1,6 +1,5 @@
 // src/lib/server/database.js
-import pkg from 'pg';
-const { Pool } = pkg;
+import { Pool } from 'pg';
 import { 
 	DATABASE_URL, 
 	DB_HOST, 
@@ -53,7 +52,7 @@ export async function query(text, params) {
 		const duration = Date.now() - start;
 		
 		if (NODE_ENV === 'development') {
-			console.log('Executed query', { text, duration, rows: res.rowCount });
+			console.log('Executed query', { text: text.substring(0, 100) + '...', duration, rows: res.rowCount });
 		}
 		
 		return res;
