@@ -1,14 +1,5 @@
 <!-- src/lib/components/dashboard/LeftSidebar.svelte -->
 <script>
-	import { Plus, ChevronDown, Hash, MessageCircle, Bot, ArrowLeftRight, Megaphone } from 'lucide';
-	
-	let channels = [
-		{ id: 1, name: 'General Discussion', icon: Hash, unread: 12, active: true },
-		{ id: 2, name: 'AI Assistance', icon: Bot, unread: 3, active: false },
-		{ id: 3, name: 'Payments & Trading', icon: ArrowLeftRight, unread: 0, active: false },
-		{ id: 4, name: 'Announcements', icon: Megaphone, unread: 1, active: false }
-	];
-	
 	let directMessages = [
 		{ id: 1, name: 'Sarah Chen', status: 'online', unread: true },
 		{ id: 2, name: 'Alex Rodriguez', status: 'away', unread: false },
@@ -31,7 +22,7 @@
 		<div class="flex items-center justify-between">
 			<h2 class="text-lg font-semibold text-white">My Workspace</h2>
 			<button class="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all hover:scale-105">
-				<Plus class="w-4 h-4 text-white" />
+				<i class="fas fa-plus text-white"></i>
 			</button>
 		</div>
 	</div>
@@ -50,41 +41,6 @@
 
 	<!-- Navigation -->
 	<div class="flex-1 overflow-y-auto p-4 space-y-6">
-		<!-- Channels Section -->
-		<div class="space-y-3">
-			<div class="flex items-center justify-between text-gray-400 text-xs font-semibold uppercase tracking-wider">
-				<div class="flex items-center gap-2">
-					<MessageCircle class="w-4 h-4" />
-					<span>Channels</span>
-				</div>
-				<button class="hover:text-gray-300 transition-colors">
-					<ChevronDown class="w-3 h-3" />
-				</button>
-			</div>
-			
-			<div class="space-y-1">
-				{#each channels as channel}
-					<div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all group {channel.active ? 'bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/30 text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}">
-						<!-- Active Indicator -->
-						<div class="w-1 h-5 rounded-full {channel.active ? 'bg-blue-500' : 'bg-transparent'}"></div>
-						
-						<!-- Channel Icon -->
-						<svelte:component this={channel.icon} class="w-4 h-4 {channel.active ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-400'}" />
-						
-						<!-- Channel Name -->
-						<span class="flex-1 font-medium text-sm">{channel.name}</span>
-						
-						<!-- Unread Count -->
-						{#if channel.unread > 0}
-							<div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full min-w-[1.25rem] h-5 flex items-center justify-center">
-								{channel.unread}
-							</div>
-						{/if}
-					</div>
-				{/each}
-			</div>
-		</div>
-
 		<!-- Direct Messages Section -->
 		<div class="space-y-3">
 			<div class="flex items-center justify-between text-gray-400 text-xs font-semibold uppercase tracking-wider">
@@ -93,7 +49,7 @@
 					<span>Direct Messages</span>
 				</div>
 				<button class="hover:text-gray-300 transition-colors">
-					<ChevronDown class="w-3 h-3" />
+					<i class="fas fa-chevron-down text-xs"></i>
 				</button>
 			</div>
 			
@@ -128,6 +84,58 @@
 						{/if}
 					</div>
 				{/each}
+			</div>
+		</div>
+
+		<!-- AI Message History -->
+		<div class="space-y-3">
+			<div class="flex items-center justify-between text-gray-400 text-xs font-semibold uppercase tracking-wider">
+				<div class="flex items-center gap-2">
+					<i class="fas fa-robot text-sm"></i>
+					<span>AI Message History</span>
+				</div>
+			</div>
+			
+			<div class="space-y-1">
+				<div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-all group">
+					<div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+						<i class="fas fa-robot text-white text-xs"></i>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="text-sm font-medium text-white truncate">Translation Request</div>
+						<div class="text-xs text-gray-400 truncate">Translate "Hello" to French</div>
+					</div>
+				</div>
+				
+				<div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-all group">
+					<div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+						<i class="fas fa-robot text-white text-xs"></i>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="text-sm font-medium text-white truncate">Content Summary</div>
+						<div class="text-xs text-gray-400 truncate">Summarize team meeting notes</div>
+					</div>
+				</div>
+
+				<div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-all group">
+					<div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+						<i class="fas fa-robot text-white text-xs"></i>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="text-sm font-medium text-white truncate">Code Review</div>
+						<div class="text-xs text-gray-400 truncate">Review JavaScript function</div>
+					</div>
+				</div>
+
+				<div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-all group">
+					<div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+						<i class="fas fa-robot text-white text-xs"></i>
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="text-sm font-medium text-white truncate">Email Draft</div>
+						<div class="text-xs text-gray-400 truncate">Help with client proposal</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

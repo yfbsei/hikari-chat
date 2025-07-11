@@ -1,7 +1,6 @@
 <!-- src/lib/components/dashboard/RightSidebar.svelte -->
 <script>
-	import { Users, BarChart3, Bot } from 'lucide';
-	
+	// Use Font Awesome icons instead of Lucide for now
 	let activeTab = 'team';
 	
 	let teamMembers = [
@@ -42,21 +41,21 @@
 			class="flex-1 flex flex-col items-center gap-1 py-4 px-3 transition-all border-b-2 {activeTab === 'team' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'}"
 			on:click={() => activeTab = 'team'}
 		>
-			<Users class="w-4 h-4" />
+			<i class="fas fa-users text-sm"></i>
 			<span class="text-xs font-medium uppercase tracking-wide">Team</span>
 		</button>
 		<button 
 			class="flex-1 flex flex-col items-center gap-1 py-4 px-3 transition-all border-b-2 {activeTab === 'analytics' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'}"
 			on:click={() => activeTab = 'analytics'}
 		>
-			<BarChart3 class="w-4 h-4" />
+			<i class="fas fa-chart-bar text-sm"></i>
 			<span class="text-xs font-medium uppercase tracking-wide">Analytics</span>
 		</button>
 		<button 
 			class="flex-1 flex flex-col items-center gap-1 py-4 px-3 transition-all border-b-2 {activeTab === 'ai' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'}"
 			on:click={() => activeTab = 'ai'}
 		>
-			<Bot class="w-4 h-4" />
+			<i class="fas fa-robot text-sm"></i>
 			<span class="text-xs font-medium uppercase tracking-wide">AI Tools</span>
 		</button>
 	</div>

@@ -63,9 +63,43 @@ export async function handle({ event, resolve }) {
 		}
 	}
 	
-	// Redirect authenticated users away from auth pages
+	// Handle authenticated users accessing auth pages
 	const authRoutes = ['/auth/login', '/auth/signup', '/auth/forgot-password'];
 	if (event.locals.user && authRoutes.includes(event.url.pathname)) {
+		// Special handling for logout action on login page
+		if (event.request.method === 'POST' && event.url.pathname === '/auth/login') {
+			// Check if this is a logout action - check both URL params and form data
+			const isLogoutActionInURL = event.url.search.includes('/logout');
+			
+			if (isLogoutActionInURL) {
+				console.log('🔓 Allowing logout action to proceed (URL-based)');
+				// Let the logout action proceed - don't redirect
+				const response = await resolve(event);
+				return response;
+			}
+			
+			// Also check form data for backward compatibility
+			try {
+				const contentType = event.request.headers.get('content-type') || '';
+				
+				if (contentType.includes('multipart/form-data') || contentType.includes('application/x-www-form-urlencoded')) {
+					const formData = await event.request.clone().formData();
+					const isLogoutAction = formData.has('/logout');
+					
+					if (isLogoutAction) {
+						console.log('🔓 Allowing logout action to proceed (form-based)');
+						// Let the logout action proceed - don't redirect
+						const response = await resolve(event);
+						return response;
+					}
+				}
+			} catch (error) {
+				console.log('Error checking for logout action:', error.message);
+			}
+		}
+		
+		// For all other cases, redirect authenticated users away from auth pages
+		console.log('🔄 Authenticated user accessing auth page, redirecting to dashboard');
 		return Response.redirect(`${event.url.origin}/dashboard`, 302);
 	}
 	

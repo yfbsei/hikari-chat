@@ -5,100 +5,73 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	let currentForm = 'login'; // 'login', 'forgot', 'signup'
+	let currentForm = 'login';
 	let passwordVisible = false;
 	let signupPasswordVisible = false;
 	let confirmPasswordVisible = false;
 	let isLoading = false;
 
 	// Form data
-	let loginData = { email: '', password: '', rememberMe: false };
+	let loginData = { email: '', password: '' };
 	let forgotData = { email: '' };
-	let signupData = { 
-		username: '', 
-		email: '', 
-		password: '', 
-		confirmPassword: '', 
-		agreeTerms: false 
-	};
+	let signupData = { username: '', email: '', password: '', confirmPassword: '', agreeTerms: false };
 
-	// Get any form data from the page store
 	$: form = $page.form;
 
 	onMount(() => {
-		// Focus on email input when component mounts
 		if (currentForm === 'login') {
 			document.getElementById('email')?.focus();
 		}
 	});
 
-	function togglePassword() {
-		passwordVisible = !passwordVisible;
-	}
+	// Toggle functions
+	const togglePassword = () => passwordVisible = !passwordVisible;
+	const toggleSignupPassword = () => signupPasswordVisible = !signupPasswordVisible;
+	const toggleConfirmPassword = () => confirmPasswordVisible = !confirmPasswordVisible;
 
-	function toggleSignupPassword() {
-		signupPasswordVisible = !signupPasswordVisible;
-	}
-
-	function toggleConfirmPassword() {
-		confirmPasswordVisible = !confirmPasswordVisible;
-	}
-
+	// Form navigation
 	function showForgotPassword() {
 		currentForm = 'forgot';
-		// Copy email from login form if filled
-		if (loginData.email) {
-			forgotData.email = loginData.email;
-		}
-		setTimeout(() => {
-			document.getElementById('resetEmail')?.focus();
-		}, 100);
+		if (loginData.email) forgotData.email = loginData.email;
+		setTimeout(() => document.getElementById('resetEmail')?.focus(), 100);
 	}
 
 	function showCreateAccount() {
 		currentForm = 'signup';
-		setTimeout(() => {
-			document.getElementById('username')?.focus();
-		}, 100);
+		setTimeout(() => document.getElementById('username')?.focus(), 100);
 	}
 
 	function showLoginForm() {
 		currentForm = 'login';
-		setTimeout(() => {
-			document.getElementById('email')?.focus();
-		}, 100);
+		setTimeout(() => document.getElementById('email')?.focus(), 100);
 	}
 
+	// Validation
 	function validateSignup() {
 		if (!signupData.username || !signupData.email || !signupData.password || !signupData.confirmPassword) {
 			alert('Please fill in all required fields');
 			return false;
 		}
-
 		if (signupData.password.length < 8) {
 			alert('Password must be at least 8 characters long');
 			return false;
 		}
-
 		if (signupData.password !== signupData.confirmPassword) {
 			alert('Passwords do not match');
 			return false;
 		}
-
 		if (!signupData.agreeTerms) {
 			alert('Please agree to the Terms of Service and Privacy Policy');
 			return false;
 		}
-
 		return true;
 	}
 
-	// Handle form submissions with loading states
+	// Enhanced form submission handler
 	const handleSubmit = () => {
 		return ({ form, data, action, cancel }) => {
 			isLoading = true;
 			
-			// Add validation for signup
 			if (action.search === '?/signup' && !validateSignup()) {
 				cancel();
 				isLoading = false;
@@ -106,22 +79,35 @@
 			}
 
 			return async ({ result, update }) => {
-				if (result.type === 'success') {
-					if (action.search === '?/login') {
-						goto('/dashboard');
-					} else if (action.search === '?/signup') {
-						alert(`Account created successfully!\n\nWelcome to Hikari Chat, ${signupData.username}!`);
-						showLoginForm();
-					} else if (action.search === '?/forgot') {
-						alert(`Password reset link sent to: ${forgotData.email}\n\nPlease check your email and follow the instructions to reset your password.`);
-						showLoginForm();
-					}
-				} else if (result.type === 'failure') {
-					alert(result.data?.message || 'An error occurred. Please try again.');
-				}
+				console.log('Form result:', result);
 				
-				isLoading = false;
-				await update();
+				try {
+					if (result.type === 'success') {
+						if (action.search === '?/login') {
+							// Login success - redirect will be handled by SvelteKit automatically
+							console.log('Login successful - redirect should happen automatically');
+							return;
+						} else if (action.search === '?/signup') {
+							alert(`Account created successfully!\n\nWelcome to Hikari Chat, ${signupData.username}!`);
+							showLoginForm();
+						} else if (action.search === '?/forgot') {
+							alert(`Password reset link sent to: ${forgotData.email}\n\nPlease check your email and follow the instructions to reset your password.`);
+							showLoginForm();
+						}
+					} else if (result.type === 'redirect') {
+						console.log('Redirect detected, location:', result.location);
+						// Let SvelteKit handle the redirect
+						return;
+					} else if (result.type === 'failure') {
+						alert(result.data?.message || 'An error occurred. Please try again.');
+					} else if (result.type === 'error') {
+						console.error('Form error:', result.error);
+						alert('An unexpected error occurred. Please try again.');
+					}
+				} finally {
+					isLoading = false;
+					await update();
+				}
 			};
 		};
 	};
@@ -156,22 +142,14 @@
 					<div class="text-2xl font-bold bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 bg-clip-text text-transparent">Hikari Chat</div>
 				</div>
 				<div class="text-gray-300 text-base mb-2">
-					{#if currentForm === 'login'}
-						Welcome back!
-					{:else if currentForm === 'forgot'}
-						Reset Password
-					{:else}
-						Create Account
-					{/if}
+					{#if currentForm === 'login'}Welcome back!
+					{:else if currentForm === 'forgot'}Reset Password
+					{:else}Create Account{/if}
 				</div>
 				<div class="text-gray-400 text-sm leading-relaxed">
-					{#if currentForm === 'login'}
-						Sign in to your account to continue
-					{:else if currentForm === 'forgot'}
-						Enter your email to receive a reset link
-					{:else}
-						Join Hikari Chat to get started
-					{/if}
+					{#if currentForm === 'login'}Sign in to your account to continue
+					{:else if currentForm === 'forgot'}Enter your email to receive a reset link
+					{:else}Join Hikari Chat to get started{/if}
 				</div>
 			</div>
 
@@ -219,17 +197,8 @@
 						</div>
 					</div>
 
-					<!-- Form Options -->
-					<div class="flex items-center justify-between mb-6">
-						<label class="flex items-center gap-2 text-gray-300 text-sm cursor-pointer hover:text-white transition-colors">
-							<input 
-								type="checkbox" 
-								name="rememberMe"
-								bind:checked={loginData.rememberMe}
-								class="w-4 h-4 border border-gray-600 rounded-md bg-transparent checked:bg-gradient-to-r checked:from-blue-500 checked:to-blue-600 checked:border-blue-500 transition-all appearance-none relative"
-							>
-							<span>Remember me</span>
-						</label>
+					<!-- Forgot Password Link -->
+					<div class="flex justify-center mb-6">
 						<button 
 							type="button" 
 							on:click={showForgotPassword}
@@ -487,9 +456,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <style>
 	/* Custom checkbox styling */
